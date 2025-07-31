@@ -32,7 +32,7 @@ const Projects = () => {
       tech: ["TypeScript", "React.js", "Node.js", "Tailwind CSS"],
       color: "from-orange-400 to-red-500",
       size: "medium",
-      github: "",
+      github: "https://github.com/chitranshuajmera0000/Portfolio",
       demo: ""
     }
   ];
