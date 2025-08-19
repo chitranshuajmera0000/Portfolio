@@ -1,33 +1,49 @@
-import React from 'react';
+
+
 import { ExternalLink, Github } from 'lucide-react';
+import EmojiIcon from './EmojiIcon';
 
 const Projects = () => {
 
   const projects = [
     {
       id: 1,
-      title: "🚀 QuickPay Command",
-      description: "Digital payment platform that's out of this world! Money transfers so smooth, they're practically weightless.",
-      tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "JWT"],
-      color: "from-blue-500 to-cyan-400",
-      size: "large",
-      github: "https://github.com/chitranshuajmera0000/QuickPay/",
-      demo: "https://quick-pay-lac.vercel.app/"
+      emoji: "📝",
+      title: "Notes App",
+      description: "Easy, secure note-taking app with Google and GitHub OAuth authentication. Organize and manage your notes effortlessly.",
+      tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "Google OAuth", "Github OAuth"],
+      color: "from-purple-500 to-pink-400",
+      size: "medium",
+      github: "https://github.com/chitranshuajmera0000/Notes-App",
+      demo: "https://notes-app-six-sable-89.vercel.app/" // add deployed link if available
     },
     {
       id: 2,
-      title: "✨ ShareIt Nebula",
+      emoji: "✨",
+      title: "ShareIt Nebula",
       description: "Blogging platform so modern, it makes other sites jealous! Content creation that's simply stellar.",
-      tech: ["React (Vite)", "Hono", "Prisma", "NeonDB", "Cloudflare Workers", "Cloudinary"],
+      tech: ["React (Vite)", "Hono", "Prisma", "NeonDB", "Cloudflare Workers", "Cloudinary" , "JWT"],
       color: "from-purple-500 to-pink-400",
       size: "large",
       github: "https://github.com/chitranshuajmera0000/ShareIt",
       demo: "https://share-it-nine.vercel.app/"
     },
-    
     {
       id: 3,
-      title: "⚡ Code Universe",
+      emoji: "🚀",
+      title: "QuickPay Command",
+      description: "Digital payment platform that's out of this world! Money transfers so smooth, they're practically weightless.",
+      tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "JWT" , "Zod" , "Bcrypt"],
+      color: "from-blue-500 to-cyan-400",
+      size: "large",
+      github: "https://github.com/chitranshuajmera0000/QuickPay/",
+      demo: "https://quick-pay-lac.vercel.app/"
+    },
+
+    {
+      id: 4,
+      emoji: "⚡",
+      title: "Code Universe",
       description: "Full-stack development showcase that pushes the boundaries of what's possible in the browser!",
       tech: ["TypeScript", "React.js", "Node.js", "Tailwind CSS"],
       color: "from-orange-400 to-red-500",
@@ -37,16 +53,6 @@ const Projects = () => {
     }
   ];
 
-  const getProjectSize = (size: string) => {
-    switch (size) {
-      case 'large':
-        return 'md:col-span-2 md:row-span-2';
-      case 'medium':
-        return 'md:col-span-2';
-      default:
-        return '';
-    }
-  };
 
   return (
     <section id="projects" className="relative py-20 px-6">
@@ -62,9 +68,10 @@ const Projects = () => {
           <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-500 to-blue-600 mb-6 tracking-tight">
             Digital <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-pulse">Playground</span>
           </h2>
-          <p className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-400 max-w-2xl mx-auto mb-4">
-            🛸 Projects that have traveled across the digital cosmos
-          </p>
+           <p className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-400 max-w-2xl mx-auto mb-4 flex flex-wrap items-center gap-2 justify-center">
+             <span className="block order-2 md:order-1">Projects that have traveled across the digital cosmos</span>
+             <span className="flex-shrink-0 flex items-center order-1 md:order-2"><EmojiIcon emoji="🛸" fallback="UFO" className="text-3xl md:text-4xl align-middle" style={{marginBottom: '-0.15em'}} /></span>
+           </p>
           <div className="flex justify-center space-x-2">
             <div className="w-16 h-1 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full animate-pulse"></div>
             <div className="w-16 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse delay-300"></div>
@@ -84,7 +91,8 @@ const Projects = () => {
 
               <div className="relative p-8 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-200 group-hover:from-cyan-400 group-hover:to-blue-400 transition-all duration-500">
+                  <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-200 group-hover:from-cyan-400 group-hover:to-blue-400 transition-all duration-500 flex items-center gap-2">
+                     <EmojiIcon emoji={project.emoji} fallback={project.title} className="w-6 h-6" />
                     {project.title}
                   </h3>
                   <a
