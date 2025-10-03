@@ -1,9 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import EmojiIcon from './EmojiIcon';
-import { Mail, Github, Linkedin, Twitter, Send, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Github, Linkedin, Twitter, Send, MapPin, CheckCircle, AlertCircle, Rocket, MapPinIcon, GlobeIcon, SatelliteIcon, UserIcon, RadioIcon, HeartIcon, SparklesIcon } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
+// Simple emoji renderer using Unicode conversion (no external dependencies)
+const EmojiRenderer = ({ emoji, fallbackIcon, className, style }: { 
+  emoji?: string; 
+  fallbackIcon?: React.ReactNode; 
+  className?: string; 
+  style?: React.CSSProperties 
+}) => {
+  if (!emoji) {
+    return fallbackIcon ? <span className={className} style={style}>{fallbackIcon}</span> : null;
+  }
 
+  const getEmojiCodepoint = (emoji: string) => {
+    return Array.from(emoji)
+      .map(char => char.codePointAt(0)?.toString(16).padStart(4, '0'))
+      .join('-')
+      .toLowerCase();
+  };
+
+  const codepoint = getEmojiCodepoint(emoji);
+  const emojiUrl = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoint}.svg`;
+
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError && fallbackIcon) {
+    return <span className={className} style={style}>{fallbackIcon}</span>;
+  }
+
+  return (
+    <img
+      src={emojiUrl}
+      alt="emoji"
+      className={className}
+      style={{ 
+        display: 'inline-block', 
+        width: '1em', 
+        height: '1em', 
+        verticalAlign: '-0.125em',
+        ...style 
+      }}
+      onError={() => setImageError(true)}
+    />
+  );
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -115,7 +156,7 @@ const Contact = () => {
               Launch <span className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-600 bg-clip-text text-transparent animate-pulse">Sequence</span>
             </h2>
             <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-orange-400 max-w-2xl mx-auto mb-4 px-4">
-              <EmojiIcon emoji="🚀" fallback="Rocket" className="inline-block text-3xl animate-bounce mr-2" />
+              <EmojiRenderer emoji="🚀" fallbackIcon={<Rocket className="inline-block text-3xl text-cyan-400" />} className="inline-block text-3xl animate-bounce mr-2" />
               Ready to build something amazing together?<br />
               Warning: May result in epic collaborations
             </p>
@@ -133,14 +174,14 @@ const Contact = () => {
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-600"></div>
 
               <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500 mb-6 flex items-center gap-3">
-                <EmojiIcon emoji="🛰️" fallback="Satellite" className="text-3xl animate-pulse" />
+                <EmojiRenderer emoji="🛰️" fallbackIcon={<SatelliteIcon className="text-3xl text-pink-400" />} className="text-3xl animate-pulse" />
                 Send Transmission
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-white text-lg font-medium mb-2 flex items-center gap-2">
-                    <EmojiIcon emoji="🧑‍🚀" fallback="User" className="text-3xl" />
+                    <EmojiRenderer emoji="🧑‍🚀" fallbackIcon={<UserIcon className="text-3xl text-blue-400" />} className="text-3xl" />
                     Your Name
                   </label>
                   <input
@@ -157,7 +198,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="email" className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-white text-lg font-medium mb-2 flex items-center gap-2">
-                    <EmojiIcon emoji="📡" fallback="Satellite Dish" className="text-3xl" />
+                    <EmojiRenderer emoji="📡" fallbackIcon={<RadioIcon className="text-3xl text-purple-400" />} className="text-3xl" />
                     Email Coordinates
                   </label>
                   <input
@@ -174,7 +215,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="message" className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-white text-lg font-medium mb-2 flex items-center gap-2">
-                    <EmojiIcon emoji="💌" fallback="Love Letter" className="text-lg" />
+                    <EmojiRenderer emoji="💌" fallbackIcon={<HeartIcon className="text-lg text-pink-400" />} className="text-lg" />
                     Your Epic Message
                   </label>
                   <textarea
@@ -204,7 +245,7 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <EmojiIcon emoji="🚀" fallback="Rocket" className="text-xl animate-bounce" />
+                      <EmojiRenderer emoji="🚀" fallbackIcon={<Rocket className="text-xl text-white" />} className="text-xl animate-bounce" />
                       Launch Message
                       <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </>
@@ -217,7 +258,7 @@ const Contact = () => {
                     <CheckCircle className="w-6 h-6 text-green-400" />
                     <div>
                       <p className="text-green-400 font-medium flex items-center gap-2">
-                        <EmojiIcon emoji="🚀" fallback="Rocket" className="text-lg" />
+                        <EmojiRenderer emoji="🚀" fallbackIcon={<Rocket className="text-lg text-green-400" />} className="text-lg" />
                         Message Launched Successfully!
                       </p>
                       <p className="text-green-300 text-sm">Your transmission has been received. I'll respond soon!</p>
@@ -230,7 +271,7 @@ const Contact = () => {
                     <AlertCircle className="w-6 h-6 text-red-400" />
                     <div>
                       <p className="text-red-400 font-medium flex items-center gap-2">
-                        <EmojiIcon emoji="🛸" fallback="UFO" className="text-lg" />
+                        <EmojiRenderer emoji="🛸" fallbackIcon={<Rocket className="text-lg text-red-400" />} className="text-lg" />
                         Transmission Failed
                       </p>
                       <p className="text-red-300 text-sm">Houston, we have a problem! Please try again or email directly.</p>
@@ -246,7 +287,7 @@ const Contact = () => {
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-500 to-green-600"></div>
 
                 <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500 mb-6 flex items-center gap-3">
-                  <EmojiIcon emoji="📍" fallback="Location Pin" className="text-3xl animate-pulse" />
+                  <EmojiRenderer emoji="📍" fallbackIcon={<MapPin className="text-3xl text-blue-400" />} className="text-3xl animate-pulse" />
                   Mission HQ
                 </h3>
 
@@ -257,7 +298,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-400 font-medium flex items-center gap-2">
-                        <EmojiIcon emoji="📧" fallback="Email" className="text-lg" />
+                        <EmojiRenderer emoji="📧" fallbackIcon={<Mail className="text-lg text-blue-400" />} className="text-lg" />
                         Direct Line
                       </p>
                       <a
@@ -277,7 +318,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-400 font-medium flex items-center gap-2">
-                        <EmojiIcon emoji="🌍" fallback="Earth" className="text-lg" />
+                        <EmojiRenderer emoji="🌍" fallbackIcon={<GlobeIcon className="text-lg text-purple-400" />} className="text-lg" />
                         Base Station
                       </p>
                       <p className="text-gray-300">Orbiting Planet Earth (Bangalore, India)</p>
@@ -289,7 +330,7 @@ const Contact = () => {
               {/* Social Links */}
               <div className="relative bg-gradient-to-br from-slate-800/40 via-gray-800/30 to-slate-900/60 backdrop-blur-sm border border-gray-600/30 hover:border-green-400/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 transition-all duration-700 hover:shadow-2xl hover:shadow-green-500/20 overflow-hidden">
                 <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-500 mb-6 flex items-center gap-3">
-                  <EmojiIcon emoji="🌐" fallback="Globe" className="text-2xl animate-spin-slow" />
+                  <EmojiRenderer emoji="🌐" fallbackIcon={<GlobeIcon className="text-2xl text-green-400" />} className="text-2xl animate-spin-slow" />
                   Social Orbit
                 </h3>
 

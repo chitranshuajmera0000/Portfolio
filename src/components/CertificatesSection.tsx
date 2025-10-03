@@ -1,7 +1,51 @@
 // import React from 'react';
-import EmojiIcon from './EmojiIcon';
+import React, { useState } from 'react';
+import { Award } from 'lucide-react';
 import CertificateCard, { Certificate } from './CertificateCard';
 
+// Simple emoji renderer using Unicode conversion (no external dependencies)
+const EmojiRenderer = ({ emoji, fallbackIcon, className, style }: { 
+  emoji?: string; 
+  fallbackIcon?: React.ReactNode; 
+  className?: string; 
+  style?: React.CSSProperties 
+}) => {
+  if (!emoji) {
+    return fallbackIcon ? <span className={className} style={style}>{fallbackIcon}</span> : null;
+  }
+
+  const getEmojiCodepoint = (emoji: string) => {
+    return Array.from(emoji)
+      .map(char => char.codePointAt(0)?.toString(16).padStart(4, '0'))
+      .join('-')
+      .toLowerCase();
+  };
+
+  const codepoint = getEmojiCodepoint(emoji);
+  const emojiUrl = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoint}.svg`;
+
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError && fallbackIcon) {
+    return <span className={className} style={style}>{fallbackIcon}</span>;
+  }
+
+  return (
+    <img
+      src={emojiUrl}
+      alt="emoji"
+      className={className}
+      style={{ 
+        display: 'inline-block', 
+        width: '1em', 
+        height: '1em', 
+        verticalAlign: '-0.125em',
+        ...style 
+      }}
+      onError={() => setImageError(true)}
+    />
+  );
+};
 
 const certificates: Certificate[] = [
     {
@@ -46,11 +90,21 @@ const CertificatesSection: React.FC = () => (
         <div className="max-w-6xl mx-auto relative z-10">
             <div className="text-center mb-16">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 mb-6 tracking-tight flex items-center justify-center gap-2">
-                    <EmojiIcon emoji="🏅" fallback="Certificate" className="text-4xl md:text-5xl lg:text-6xl align-middle" style={{marginBottom: '-0.2em'}} />
+                    <EmojiRenderer 
+                        emoji="🏅" 
+                        fallbackIcon={<Award className="text-4xl md:text-5xl lg:text-6xl text-cyan-400" />}
+                        className="text-4xl md:text-5xl lg:text-6xl align-middle" 
+                        style={{marginBottom: '-0.2em'}} 
+                    />
                     Certificate <span className="bg-gradient-to-r from-purple-400 via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-pulse">Gallery</span>
                 </h2>
                 <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 max-w-2xl mx-auto mb-4 px-4 flex items-center justify-center gap-1">
-                    <EmojiIcon emoji="" fallback="Certificate" className="text-xl md:text-2xl lg:text-3xl align-middle" style={{marginBottom: '-0.15em'}} />
+                    <EmojiRenderer 
+                        emoji="⭐" 
+                        fallbackIcon={<Award className="text-xl md:text-2xl lg:text-3xl text-purple-400" />}
+                        className="text-xl md:text-2xl lg:text-3xl align-middle" 
+                        style={{marginBottom: '-0.15em'}} 
+                    />
                     A showcase of my verified achievements and credentials
                 </p>
                 <div className="flex justify-center space-x-2">

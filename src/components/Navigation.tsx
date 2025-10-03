@@ -1,5 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, User, Code2, Briefcase, Mail, Award } from 'lucide-react';
+import { Menu, X, Home, User, Code2, Briefcase, Mail, Award, Sparkles } from 'lucide-react';
+
+// Simple emoji renderer using Unicode conversion (no external dependencies)
+const EmojiRenderer = ({ emoji, fallbackIcon, className, style }: { 
+  emoji?: string; 
+  fallbackIcon?: React.ReactNode; 
+  className?: string; 
+  style?: React.CSSProperties 
+}) => {
+  if (!emoji) {
+    return fallbackIcon ? <span className={className} style={style}>{fallbackIcon}</span> : null;
+  }
+
+  const getEmojiCodepoint = (emoji: string) => {
+    return Array.from(emoji)
+      .map(char => char.codePointAt(0)?.toString(16).padStart(4, '0'))
+      .join('-')
+      .toLowerCase();
+  };
+
+  const codepoint = getEmojiCodepoint(emoji);
+  const emojiUrl = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoint}.svg`;
+
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError && fallbackIcon) {
+    return <span className={className} style={style}>{fallbackIcon}</span>;
+  }
+
+  return (
+    <img
+      src={emojiUrl}
+      alt="emoji"
+      className={className}
+      style={{ 
+        display: 'inline-block', 
+        width: '1em', 
+        height: '1em', 
+        verticalAlign: '-0.125em',
+        ...style 
+      }}
+      onError={() => setImageError(true)}
+    />
+  );
+};
 
 const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,7 +130,7 @@ const Navigation: React.FC = () => {
           {/* Menu Header */}
           <div className="text-center mb-4 pb-4 border-b border-white/10">
             <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 animate-pulse">
-              ⭐ Navigation
+              <EmojiRenderer emoji="⭐" fallbackIcon={<Sparkles className="inline-block mr-1 text-cyan-400" />} className="inline-block mr-1" /> Navigation
             </h3>
           </div>
           
@@ -121,7 +165,7 @@ const Navigation: React.FC = () => {
           {/* Menu Footer */}
           <div className="mt-6 pt-4 border-t border-white/10 text-center">
             <div className="text-xs text-white/40 animate-pulse">
-              ✨ Code Astronaut Portal
+              <EmojiRenderer emoji="✨" fallbackIcon={<Sparkles className="inline-block mr-1 text-white/40" />} className="inline-block mr-1" /> Code Astronaut Portal
             </div>
           </div>
         </div>

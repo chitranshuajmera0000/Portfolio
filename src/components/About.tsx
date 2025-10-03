@@ -1,7 +1,49 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import { Code, Rocket, Heart, Zap } from 'lucide-react';
-import EmojiIcon from './EmojiIcon';
+
+// Simple emoji renderer using Unicode conversion (no external dependencies)
+const EmojiRenderer = ({ emoji, fallbackIcon, className, style }: { 
+  emoji?: string; 
+  fallbackIcon?: React.ReactNode; 
+  className?: string; 
+  style?: React.CSSProperties 
+}) => {
+  if (!emoji) {
+    return fallbackIcon ? <span className={className} style={style}>{fallbackIcon}</span> : null;
+  }
+
+  const getEmojiCodepoint = (emoji: string) => {
+    return Array.from(emoji)
+      .map(char => char.codePointAt(0)?.toString(16).padStart(4, '0'))
+      .join('-')
+      .toLowerCase();
+  };
+
+  const codepoint = getEmojiCodepoint(emoji);
+  const emojiUrl = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoint}.svg`;
+
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError && fallbackIcon) {
+    return <span className={className} style={style}>{fallbackIcon}</span>;
+  }
+
+  return (
+    <img
+      src={emojiUrl}
+      alt="emoji"
+      className={className}
+      style={{ 
+        display: 'inline-block', 
+        width: '1em', 
+        height: '1em', 
+        verticalAlign: '-0.125em',
+        ...style 
+      }}
+      onError={() => setImageError(true)}
+    />
+  );
+};
 
 const About: React.FC = () => {
   const features = [
@@ -78,7 +120,7 @@ const About: React.FC = () => {
             Meet <span className="bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 bg-clip-text text-transparent animate-pulse">Chitranshu</span>
           </h2>
           <p className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 max-w-2xl mx-auto mb-4">
-            <EmojiIcon emoji="⚡" fallback="High Voltage" className="inline-block mr-1" /> Full Stack Developer • Code Astronaut • Digital Innovator
+            <EmojiRenderer emoji="⚡" fallbackIcon={<Zap className="inline-block mr-1 text-cyan-400" />} className="inline-block mr-1" /> Full Stack Developer • Code Astronaut • Digital Innovator
           </p>
           <div className="flex justify-center space-x-2">
             <div className="w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse"></div>
@@ -93,7 +135,7 @@ const About: React.FC = () => {
             <div className="bg-gradient-to-br from-white/5 via-blue-500/5 to-purple-500/5 backdrop-blur-sm border border-gradient-to-r border-cyan-500/20 rounded-3xl p-8 shadow-2xl h-full flex flex-col justify-center">
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg leading-relaxed font-medium text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300 mb-5">
-                  <EmojiIcon emoji="⭐" fallback="Star" className="text-cyan-400 font-bold text-xl mr-1" /> Plot twist: I don't just turn coffee into code—I fuel starships with
+                  <EmojiRenderer emoji="⭐" fallbackIcon={<Zap className="text-cyan-400 font-bold text-xl mr-1" />} className="text-cyan-400 font-bold text-xl mr-1" /> Plot twist: I don't just turn coffee into code—I fuel starships with
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500"> JavaScript</span> and chart new galaxies with
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"> TypeScript</span>! As a
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"> digital space explorer</span>, my mission isn't just to build websites, but to launch
@@ -101,7 +143,7 @@ const About: React.FC = () => {
                 </p>
 
                 <p className="text-base leading-relaxed font-medium text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-400 mb-5">
-                  <EmojiIcon emoji="⚡" fallback="High Voltage" className="text-purple-400 font-bold text-xl mr-1" /> Fluent in
+                  <EmojiRenderer emoji="⚡" fallbackIcon={<Zap className="text-purple-400 font-bold text-xl mr-1" />} className="text-purple-400 font-bold text-xl mr-1" /> Fluent in
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"> TypeScript</span>, I build with
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"> React</span>, and engineer with
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-600"> Next.js</span>—assembling UIs with precision. My cosmic toolkit also includes
@@ -109,12 +151,12 @@ const About: React.FC = () => {
                 </p>
 
                 <p className="text-base leading-relaxed font-medium text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-400 mb-5">
-                  <EmojiIcon emoji="🚀" fallback="Rocket" className="text-yellow-400 font-bold text-xl mr-1" /> Currently, I'm charting my course at MS Ramaiah Institute of Technology with a stellar
+                  <EmojiRenderer emoji="🚀" fallbackIcon={<Rocket className="text-yellow-400 font-bold text-xl mr-1" />} className="text-yellow-400 font-bold text-xl mr-1" /> Currently, I'm charting my course at MS Ramaiah Institute of Technology with a stellar
                   <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500"> 9.40/10.00 CGPA</span>—learning, exploring, and pushing my technical spacecraft to new frontiers. From designing entire digital universes to mastering scalable architectures, my codebase is cleaner than an airlocked hull.
                 </p>
 
                 <p className="text-base leading-relaxed font-medium text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">
-                  <EmojiIcon emoji="✨" fallback="Sparkles" className="text-pink-400 font-bold text-xl mr-1" /> Ready to collaborate with like-minded explorers? Let's launch something extraordinary together!
+                  <EmojiRenderer emoji="✨" fallbackIcon={<Zap className="text-pink-400 font-bold text-xl mr-1" />} className="text-pink-400 font-bold text-xl mr-1" /> Ready to collaborate with like-minded explorers? Let's launch something extraordinary together!
                 </p>
               </div>
             </div>

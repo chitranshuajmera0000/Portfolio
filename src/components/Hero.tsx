@@ -1,7 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import EmojiIcon from './EmojiIcon';
 import { ChevronDown, Sparkles, Rocket, Globe, Zap, Building } from 'lucide-react';
 
+
+// Simple emoji renderer using Unicode conversion (no external dependencies)
+const EmojiRenderer = ({ emoji, fallbackIcon, className, style }: { 
+  emoji?: string; 
+  fallbackIcon?: React.ReactNode; 
+  className?: string; 
+  style?: React.CSSProperties 
+}) => {
+  if (!emoji) {
+    return fallbackIcon ? <span className={className} style={style}>{fallbackIcon}</span> : null;
+  }
+
+  const getEmojiCodepoint = (emoji: string) => {
+    return Array.from(emoji)
+      .map(char => char.codePointAt(0)?.toString(16).padStart(4, '0'))
+      .join('-')
+      .toLowerCase();
+  };
+
+  const codepoint = getEmojiCodepoint(emoji);
+  const emojiUrl = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${codepoint}.svg`;
+
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError && fallbackIcon) {
+    return <span className={className} style={style}>{fallbackIcon}</span>;
+  }
+
+  return (
+    <img
+      src={emojiUrl}
+      alt="emoji"
+      className={className}
+      style={{ 
+        display: 'inline-block', 
+        width: '1em', 
+        height: '1em', 
+        verticalAlign: '-0.125em',
+        ...style 
+      }}
+      onError={() => setImageError(true)}
+    />
+  );
+};
 
 const Hero: React.FC = () => {
   const [currentTitle, setCurrentTitle] = useState(0);
@@ -122,7 +165,7 @@ const Hero: React.FC = () => {
               Launching ideas into orbit • Building stellar user experiences • Debugging at light speed
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">
-                Houston, we have solutions! <EmojiIcon emoji="🚀" fallback="rocket" className="text-3xl" />
+                Houston, we have solutions! <EmojiRenderer emoji="🚀" fallbackIcon={<Rocket className="text-3xl text-cyan-400" />} className="text-3xl" />
               </span>
             </p>
           </div>
